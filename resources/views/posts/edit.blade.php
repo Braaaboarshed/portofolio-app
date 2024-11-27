@@ -16,11 +16,12 @@
         <textarea class="form-control" id="description" name="description" rows="4" required>{{ $post->description }}</textarea>
     </div>
     <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input type="file" class="form-control" id="image" name="image">
-        @if($post->image)
-        <img src="{{ asset('storage/' . $post->image) }}" width="100" height="100" class="mt-2">
-        @endif
+        <label for="images" class="form-label">Images</label>
+        <input type="file" class="form-control" id="images" name="images[]" multiple>
+
+        @foreach($post->images as $image)
+            <img src="{{ asset('storage/' . $image->path) }}" width="100" height="100" class="mt-2">
+        @endforeach
     </div>
     <button type="submit" class="btn btn-success">Update Post</button>
 </form>

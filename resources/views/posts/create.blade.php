@@ -15,9 +15,10 @@
         <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
     </div>
     <div class="mb-3">
-        <label for="image" class="form-label">Image</label>
-        <input type="file" class="form-control" id="image" name="image">
+        <label for="images" class="form-label">Images</label>
+        <input type="file" class="form-control" id="images" name="images[]" multiple>
     </div>
     <button type="submit" class="btn btn-success">Save Post</button>
 </form>
+
 @endsection

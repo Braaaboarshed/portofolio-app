@@ -11,6 +11,10 @@ class Post extends Model
     protected $fillable = [
         'title',
         'description',
-        'image',
+    
     ];
+    public function images()
+{
+    return $this->hasMany(Image::class);
+}
 }

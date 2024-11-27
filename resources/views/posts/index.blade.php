@@ -11,11 +11,11 @@
 <table class="table table-striped table-bordered table-dark">
     <thead>
         <tr>
-            <th scope="col" >NO</th>
-            <th scope="col" >Title</th>
-            <th scope="col" >Description</th>
-            <th scope="col" >Image</th>
-            <th scope="col" >Actions</th>
+            <th scope="col">NO</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Images</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,10 +25,12 @@
             <td>{{ $post->title }}</td>
             <td>{{ Str::limit($post->description, 50) }}</td>
             <td>
-                @if($post->image)
-                <img src="{{ asset('storage/' . $post->image) }}" width="50" height="50">
+                @if($post->images->isEmpty())
+                    No Images
                 @else
-                No Image
+                    @foreach($post->images as $image)
+                        <img src="{{ asset('storage/' . $image->path) }}" width="50" height="50" class="mr-2">
+                    @endforeach
                 @endif
             </td>
             <td>
