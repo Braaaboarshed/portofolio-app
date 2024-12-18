@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
     public function index()
     {
+        // $user = Auth::user();
         $posts = Post::with('images')->get();
+        // dd($user);
         return view('posts.index', compact('posts'));
     }
 
