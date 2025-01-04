@@ -19,8 +19,8 @@
         <label for="images" class="form-label">Images</label>
         <input type="file" class="form-control" id="images" name="images[]" multiple>
 
-        @foreach($post->images as $image)
-            <img src="{{ asset('storage/' . $image->path) }}" width="100" height="100" class="mt-2">
+        @foreach($images as $image)
+            <img src="{{ asset('storage/' . $image) }}" width="100" height="100" class="mt-2">
         @endforeach
     </div>
     <button type="submit" class="btn btn-success">Update Post</button>

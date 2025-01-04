@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +12,7 @@ class PostController extends Controller
     {
         // $user = Auth::user();
 
-        $posts = Post::with('images')->get();
+        $posts = Post:: all();
         // dd($user);
         return view('posts.index', compact('posts'));
     }
@@ -56,8 +55,9 @@ class PostController extends Controller
 
     public function edit(Post $post)
     {
-        $post->load('images');
-        return view('posts.edit', compact('post'));
+
+ $images = json_decode($post->image, true);
+        return view('posts.edit', compact('post','images'));
     }
 
     public function update(Request $request, Post $post)
@@ -90,7 +90,7 @@ class PostController extends Controller
     }
 
 
-    
+
 
     public function destroy(Post $post)
     {
