@@ -5,11 +5,9 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center">
     <h1>All Posts</h1>
-   <div>
-    <a href="{{ route('posts.create') }}" class="btn btn-primary">Add New Post</a>
-
-    <a href="{{ route('users.index') }}" class="btn btn-success">Show users</a>
-   </div>
+    <div>
+        <a href="{{ route('posts.create') }}" class="btn btn-primary">Add New Post</a>
+    </div>
 </div>
 
 <table class="table table-striped table-bordered table-dark">
@@ -29,12 +27,16 @@
             <td>{{ $post->title }}</td>
             <td>{{ Str::limit($post->description, 50) }}</td>
             <td>
-                @if($post->images->isEmpty())
-                    No Images
-                @else
-                    @foreach($post->images as $image)
-                        <img src="{{ asset('storage/' . $image->path) }}" width="50" height="50" class="mr-2">
+                @if (!empty($post->image))
+                    @php
+                        $images = json_decode($post->image, true); // فك تشفير المصفوفة
+                    @endphp
+
+                    @foreach ($images as $image)
+                        <img src="{{ asset('storage/' . $image) }}" width="50" height="50" class="mr-2">
                     @endforeach
+                @else
+                    No Images
                 @endif
             </td>
             <td>

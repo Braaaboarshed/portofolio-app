@@ -12,6 +12,7 @@ class PostController extends Controller
     public function index()
     {
         // $user = Auth::user();
+
         $posts = Post::with('images')->get();
         // dd($user);
         return view('posts.index', compact('posts'));
@@ -29,23 +30,28 @@ class PostController extends Controller
             'description' => 'required|string',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        $post = Post::create($request->only(['title', 'description']));
-
+        $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('posts', 'public');
-                $post->images()->create(['path' => $path]);
-            }
+
+                $path = $image->store('uploads/posts', 'public');
+                $imagePaths[] = $path;             }
         }
+
+        $post = Post::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' =>  json_encode($imagePaths),
+        ]);
+
 
         return redirect()->route('posts.index')->with('success', 'Post created successfully!');
     }
 
     public function show(Post $post)
     {
-        $post->load('images');
-        return view('posts.show', compact('post'));
+ $images = json_decode($post->image, true);
+    return view('posts.show', compact('post', 'images'));
     }
 
     public function edit(Post $post)
@@ -64,30 +70,41 @@ class PostController extends Controller
 
         $post->update($request->only(['title', 'description']));
 
+        $oldImages = json_decode($post->image, true) ?? [];
+        $newImages = [];
+
         if ($request->hasFile('images')) {
-            foreach ($post->images as $oldImage) {
-                Storage::delete('public/' . $oldImage->path);
-                $oldImage->delete();
+            foreach ($oldImages as $oldImage) {
+                Storage::delete('public/' . $oldImage);
             }
 
             foreach ($request->file('images') as $image) {
                 $path = $image->store('posts', 'public');
-                $post->images()->create(['path' => $path]);
+                $newImages[] = $path;
             }
+
+            $post->update(['image' => json_encode($newImages)]);
         }
 
         return redirect()->route('posts.index')->with('success', 'Post updated successfully!');
     }
 
+
+    
+
     public function destroy(Post $post)
     {
-        foreach ($post->images as $image) {
-            Storage::delete('public/' . $image->path);
-            $image->delete();
+        $images = json_decode($post->image, true);
+
+        if (!empty($images)) {
+            foreach ($images as $imagePath) {
+                Storage::delete('public/' . $imagePath);
+            }
         }
 
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
     }
+
 }
