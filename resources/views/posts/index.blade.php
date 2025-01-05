@@ -7,7 +7,24 @@
     <h1>All Posts</h1>
     <div>
         <a href="{{ route('posts.create') }}" class="btn btn-primary">Add New Post</a>
+        @can('create','update','delete', App\Models\User::class)
+
+        <a href="{{ route('users.index') }}" class="btn btn-primary">Mange users</a>
+        @endcan
+        
+        @can('deleteAllPosts', App\Models\User::class)
+        <form action="{{ route('deleteAllPosts') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-danger">Delete All Posts</button>
+        </form>
+    @endcan
+
+        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            @csrf
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
     </div>
+
 </div>
 
 <table class="table table-striped table-bordered table-dark">

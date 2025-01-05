@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
         $users = User::all();
@@ -15,11 +19,15 @@ class UserController extends Controller
 
     public function create()
     {
+
+        $this->authorize('create', User::class);
         return view('users.create');
     }
 
     public function store(Request $request)
     {
+        $this->authorize('create', User::class);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'role'=>'user',
@@ -38,12 +46,16 @@ class UserController extends Controller
     }
 
     public function edit(User $user)
+
     {
+        $this->authorize('update', User::class);
+
         return view('users.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)
     {
+        $this->authorize('update', User::class);
         $request->validate([
             'name' => 'required|string|max:255',
            'role' => 'required|in:user,admin',
@@ -63,6 +75,7 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $this->authorize('delete', User::class);
         $user->delete();
             return redirect()->route('users.index')->with('success', 'تم حذف المستخدم بنجاح');
     }

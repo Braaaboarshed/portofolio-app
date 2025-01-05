@@ -2,12 +2,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+
+
+
 
 class PostController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
         // $user = Auth::user();
@@ -107,4 +115,10 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully!');
     }
 
+    public function deleteAllPosts()
+{
+    $this->authorize('deleteAllPosts', User::class);
+    DB::table('posts')->delete();
+    return redirect()->route('posts.index')->with('success', 'All posts deleted successfully!');
+}
 }
