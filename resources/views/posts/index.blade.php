@@ -46,7 +46,7 @@
             <td>
                 @if (!empty($post->image))
                     @php
-                        $images = json_decode($post->image, true); // فك تشفير المصفوفة
+                        $images = json_decode($post->image, true); 
                     @endphp
 
                     @foreach ($images as $image)
